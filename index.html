@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>कृषि AI सहायक</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, "Noto Sans Devanagari", sans-serif;
+    }
+
+    body {
+      background: #f1f8f3;
+      color: #17351f;
+    }
+
+    header {
+      background: linear-gradient(135deg, #137a3b, #42a85f);
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    header span {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .hero {
+      padding: 55px 7%;
+      text-align: center;
+      background: linear-gradient(180deg, #e4f7e9, #f1f8f3);
+    }
+
+    .hero h2 {
+      font-size: 38px;
+      color: #126b32;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 13px 25px;
+      border: none;
+      border-radius: 30px;
+      background: #168343;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 86%;
+      max-width: 1100px;
+      margin: 35px auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #126b32;
+    }
+
+    .crop-box {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0 15px;
+      border: 1px solid #c8dfce;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.07);
+    }
+
+    .card h3 {
+      color: #168343;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      line-height: 1.6;
+      color: #506056;
+    }
+
+    .ai-box {
+      background: #123d24;
+      color: white;
+      padding: 30px;
+      border-radius: 20px;
+      margin-top: 35px;
+    }
+
+    .ai-box h2 {
+      margin-bottom: 10px;
+    }
+
+    .chat {
+      background: white;
+      color: #222;
+      padding: 18px;
+      border-radius: 12px;
+      min-height: 100px;
+      margin: 18px 0;
+    }
+
+    .user-msg {
+      background: #e1f5e6;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .ai-msg {
+      background: #f2f2f2;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    footer {
+      text-align: center;
+      background: #0d5228;
+      color: white;
+      padding: 25px;
+      margin-top: 45px;
+    }
+
+    @media(max-width:600px) {
+      .hero h2 {
+        font-size: 29px;
+      }
+
+      header h1 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌾 कृषि AI सहायक</h1>
+  <span>किसानों का डिजिटल साथी</span>
+</header>
+
+<section class="hero">
+  <h2>फसल की जानकारी अब AI से</h2>
+  <p>
+    अपनी फसल के बारे में जानकारी प्राप्त करें।
+    मिट्टी, मौसम, सिंचाई, खाद और कीट प्रबंधन से जुड़े
+    सवाल AI कृषि सहायक से पूछें।
+  </p>
+  <button class="btn" onclick="scrollToAI()">🤖 AI से पूछें</button>
+</section>
+
+<div class="container">
+
+  <h2 class="section-title">🌱 फसल की जानकारी</h2>
+
+  <div class="crop-box">
+    <label>फसल चुनें</label>
+
+    <select id="crop" onchange="showCropInfo()">
+      <option value="">-- फसल चुनें --</option>
+      <option value="गेहूँ">गेहूँ</option>
+      <option value="धान">धान</option>
+      <option value="सोयाबीन">सोयाबीन</option>
+      <option value="चना">चना</option>
+      <option value="मक्का">मक्का</option>
+      <option value="कपास">कपास</option>
+    </select>
+
+    <div id="cropInfo">
+      फसल चुनने के बाद जानकारी यहाँ दिखाई देगी।
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>🌦️ मौसम</h3>
+      <p>बारिश और तापमान की जानकारी देखकर सिंचाई और खेती की योजना बनाएं।</p>
+    </div>
+
+    <div class="card">
+      <h3>💧 सिंचाई</h3>
+      <p>फसल की आवश्यकता के अनुसार सही समय पर सिंचाई करने की जानकारी प्राप्त करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🐛 कीट प्रबंधन</h3>
+      <p>फसल में दिखाई देने वाले कीटों और सामान्य बचाव उपायों की जानकारी प्राप्त करें।</p>
+    </div>
+
+    <div class="card">
+      <h3>🌱 मिट्टी</h3>
+      <p>मिट्टी की स्थिति के अनुसार फसल और पोषक तत्वों की जानकारी देखें।</p>
+    </div>
+
+  </div>
+
+  <div class="ai-box" id="ai">
+    <h2>🤖 AI कृषि सहायक</h2>
+    <p>अपना कृषि संबंधी सवाल नीचे लिखें:</p>
+
+    <div class="chat" id="chat">
+      <div class="ai-msg">
+        नमस्ते किसान भाई/बहन! 👋 मैं आपका AI कृषि सहायक हूँ।
+        आप फसल, सिंचाई, खाद, मिट्टी या कीट से संबंधित सवाल पूछ सकते हैं।
+      </div>
+    </div>
+
+    <input
+      type="text"
+      id="question"
+      placeholder="जैसे: गेहूँ में सिंचाई कब करें?"
+    >
+
+    <button class="btn" onclick="askAI()">पूछें</button>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 कृषि AI सहायक | किसानों के लिए डिजिटल जानकारी
+</footer>
+
+<script>
+
+function showCropInfo() {
+
+  const crop = document.getElementById("crop").value;
+  const info = document.getElementById("cropInfo");
+
+  const data = {
+
+    "गेहूँ":
+      "गेहूँ के लिए अच्छी जल निकासी वाली मिट्टी उपयोगी होती है। सिंचाई और खाद का प्रयोग स्थानीय कृषि सलाह के अनुसार करें।",
+
+    "धान":
+      "धान को पर्याप्त पानी की आवश्यकता होती है। खेत में पानी का प्रबंधन और खरपतवार नियंत्रण महत्वपूर्ण है।",
+
+    "सोयाबीन":
+      "सोयाबीन में जल निकासी बहुत महत्वपूर्ण है। अधिक पानी रुकने से फसल को नुकसान हो सकता है।",
+
+    "चना":
+      "चना सामान्यतः कम पानी वाली फसल है। अधिक सिंचाई से बचें और रोग-कीट की नियमित निगरानी करें।",
+
+    "मक्का":
+      "मक्का में शुरुआती विकास और फूल आने के समय पर्याप्त नमी रखना महत्वपूर्ण है।",
+
+    "कपास":
+      "कपास में खरपतवार और कीटों की नियमित निगरानी करें तथा स्थानीय कृषि विशेषज्ञ की सलाह लें।"
+  };
+
+  if (crop) {
+    info.innerHTML =
+      "<p style='margin-top:15px;line-height:1.7;'>" +
+      "<b>" + crop + ":</b> " + data[crop] +
+      "</p>";
+  } else {
+    info.innerHTML = "फसल चुनने के बाद जानकारी यहाँ दिखाई देगी।";
+  }
+}
+
+
+function askAI() {
+
+  const question = document.getElementById("question").value;
+  const chat = document.getElementById("chat");
+
+  if (!question.trim()) {
+    alert("कृपया अपना सवाल लिखें।");
+    return;
+  }
+
+  chat.innerHTML +=
+    "<div class='user-msg'><b>आप:</b> " +
+    question +
+    "</div>";
+
+  let answer =
+    "आपका सवाल प्राप्त हुआ। बेहतर सलाह के लिए अपनी फसल, स्थान, मिट्टी और समस्या की जानकारी दें।";
+
+  if (question.includes("सिंचाई")) {
+    answer =
+      "सिंचाई की आवश्यकता फसल, मिट्टी और मौसम पर निर्भर करती है। खेत की नमी देखकर और स्थानीय कृषि सलाह के अनुसार सिंचाई करें।";
+  }
+
+  if (question.includes("खाद")) {
+    answer =
+      "खाद का प्रयोग मिट्टी की जाँच और फसल की आवश्यकता के अनुसार करना बेहतर होता है।";
+  }
+
+  if (question.includes("कीट")) {
+    answer =
+      "कीट की सही पहचान के बाद ही नियंत्रण उपाय चुनें। पहले फसल और कीट की स्थिति की जाँच करें।";
+  }
+
+  setTimeout(() => {
+
+    chat.innerHTML +=
+      "<div class='ai-msg'><b>AI:</b> " +
+      answer +
+      "</div>";
+
+    chat.scrollTop = chat.scrollHeight;
+
+  }, 500);
+
+  document.getElementById("question").value = "";
+}
+
+
+function scrollToAI() {
+  document.getElementById("ai").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+</script>
+
+</body>
+</html>
